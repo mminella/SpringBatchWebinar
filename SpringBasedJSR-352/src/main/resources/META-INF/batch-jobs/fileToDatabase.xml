@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+	<import resource="classpath:jobs/fileToDatabase.xml"/>
+
+	<jdbc:initialize-database enabled="true" data-source="dataSource">
+		<jdbc:script location="classpath:/META-INF/hsql-business-schema.sql"/>
+	</jdbc:initialize-database>
+
+	<bean id="reader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+		<property name="resource" value="file://#{jobParameters['fileName']}"/>
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="lineTokenizer">
+					<bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer"/>
+				</property>
+				<property name="fieldSetMapper">
+					<bean class="io.spring.batch.jsr.reader.CustomerFieldSetMapper"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="writer" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="sql" value="INSERT INTO CUSTOMER VALUES(:customerName, :qty)"/>
+		<property name="itemSqlParameterSourceProvider">
+			<bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"/>
+		</property>
+	</bean>
+</beans>

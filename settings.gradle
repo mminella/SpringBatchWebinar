@@ -1,4 +1,5 @@
 rootProject.name = 'SpringBatchWebinar'
 
 include 'JSR-352'
+include 'SpringBasedJSR-352'
 

@@ -1,2 +1,5 @@
 <batch-artifacts xmlns="http://xmlns.jcp.org/xml/ns/javaee">
+	<ref id="initializer" class="io.spring.batch.jsr.listener.DatabaseIntializer"/>
+	<ref id="reader" class="io.spring.batch.jsr.reader.FileItemReader"/>
+	<ref id="writer" class="io.spring.batch.jsr.writer.JdbcItemWriter"/>
 </batch-artifacts>

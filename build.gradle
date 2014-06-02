@@ -75,3 +75,36 @@ project('JSR-352') {
 
     tasks['build'].dependsOn(['copyLibs']);
 }
+
+project('SpringBasedJSR-352') {
+
+    dependencies {
+        compile "org.springframework.batch:spring-batch-core:$springBatchVersion"
+        compile "org.springframework:spring-jdbc:$springVersion"
+        compile "javax.batch:javax.batch-api:$javaxBatchApiVersion"
+        compile "javax.inject:javax.inject:$javaxInjectApiVersion"
+        compile "commons-dbcp:commons-dbcp:$commonsDdbcpVersion"
+        compile "org.hsqldb:hsqldb:$hsqldbVersion"
+
+        testCompile "junit:junit:$junitVersion"
+    }
+
+    jar {
+        manifest {
+            attributes("Manifest-Version": '1.0',
+                    "Created-By": "${System.getProperty('java.version')} (${System.getProperty('java.specification.vendor')})",
+                    "Implementation-Title": project.name,
+                    "Implementation-Version": project.version,
+                    "Main-Class": 'io.spring.batch.Main',
+                    "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+            )
+        }
+    }
+
+    task copyLibs(type: Copy) {
+        from configurations.runtime
+        into buildDir.absolutePath + '/libs'
+    }
+
+    tasks['build'].dependsOn(['copyLibs']);
+}
