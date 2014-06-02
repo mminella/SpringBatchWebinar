@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	To run this job:
+	$ ./gradlew clean build
+	$ java -jar JSR-352/build/libs/JSR-352.jar helloWorldJob
+-->
+<job id="helloWorld" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+	<step id="step1">
+		<batchlet ref="io.spring.batch.jsr.batchlet.HelloWorldBatchlet">
+			<properties>
+				<property name="name" value="#{jobParameters['name']}"/>
+			</properties>
+		</batchlet>
+	</step>
+</job>

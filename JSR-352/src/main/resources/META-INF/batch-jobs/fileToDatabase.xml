@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	To run this job:
+	$ ./gradlew clean build
+	$ java -jar JSR-352/build/libs/JSR-352.jar fileToDatabase fileName=/Users/mminella/Documents/IntelliJWorkspace/SpringBatchWebinar/JSR-352/src/main/resources/data/customer.csv
+-->
+<job id="fileToDatabase" xmlns="http://xmlns.jcp.org/xml/ns/javaee" version="1.0">
+	<listeners>
+		<listener ref="io.spring.batch.jsr.listener.DatabaseIntializer">
+			<properties>
+				<property name="scriptPath" value="/hsql-business-schema.sql"/>
+			</properties>
+		</listener>
+	</listeners>
+	<step id="step1">
+		<chunk>
+			<reader ref="io.spring.batch.jsr.reader.FileItemReader">
+				<properties>
+					<property name="fileName" value="#{jobParameters['fileName']}"/>
+				</properties>
+			</reader>
+			<writer ref="io.spring.batch.jsr.writer.JdbcItemWriter"/>
+		</chunk>
+	</step>
+</job>
