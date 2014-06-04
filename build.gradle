@@ -1,5 +1,15 @@
 version = '1.0'
 
+buildscript {
+    repositories {
+        maven { url 'http://repo.spring.io/libs-milestone' }
+    }
+
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.1.0.RC1'
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -18,6 +28,7 @@ allprojects {
     ext {
         springBatchVersion = '3.0.0.RELEASE'
         springVersion = '4.0.5.RELEASE'
+        springIntegrationVersion = '4.0.2.RELEASE'
 
         commonsDdbcpVersion = '1.4'
         hsqldbVersion = '2.3.2'
@@ -107,4 +118,21 @@ project('SpringBasedJSR-352') {
     }
 
     tasks['build'].dependsOn(['copyLibs']);
+}
+
+project('SpringBatchIntegration') {
+
+    apply plugin: 'spring-boot'
+
+    dependencies {
+        compile 'org.springframework.boot:spring-boot-starter-integration'
+        compile "org.springframework.batch:spring-batch-core:$springBatchVersion"
+        compile "org.springframework:spring-jdbc:$springVersion"
+        compile "commons-dbcp:commons-dbcp:$commonsDdbcpVersion"
+        compile "org.hsqldb:hsqldb:$hsqldbVersion"
+        compile "org.springframework.integration:spring-integration-twitter:$springIntegrationVersion"
+        compile "org.springframework.batch:spring-batch-integration:$springBatchVersion"
+
+        testCompile "junit:junit:$junitVersion"
+    }
 }
