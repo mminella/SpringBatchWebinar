@@ -16,6 +16,7 @@
 package io.spring.batch.configuration;
 
 import io.spring.batch.domain.Customer;
+import io.spring.batch.listener.JobStatusListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -99,7 +100,7 @@ public class BatchConfiguration {
 	}
 
 	@Bean
-	protected Job fileToDatabase(Step step1) {
-		return jobBuilderFactory.get("fileToDatabase").start(step1).build();
+	protected Job fileToDatabase(Step step1, JobStatusListener listener) {
+		return jobBuilderFactory.get("fileToDatabase").listener(listener).start(step1).build();
 	}
 }

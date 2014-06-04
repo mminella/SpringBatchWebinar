@@ -23,8 +23,11 @@ import org.springframework.integration.annotation.InboundChannelAdapter;
 import org.springframework.integration.annotation.Poller;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.endpoint.EventDrivenConsumer;
 import org.springframework.integration.metadata.PropertiesPersistingMetadataStore;
 import org.springframework.integration.twitter.inbound.TimelineReceivingMessageSource;
+import org.springframework.integration.twitter.outbound.StatusUpdatingMessageHandler;
+import org.springframework.messaging.SubscribableChannel;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Component;
 
@@ -69,9 +72,22 @@ public class IntegrationConfiguration {
 		return new DirectChannel();
 	}
 
+//	@Bean
+//	protected DirectChannel jobChannel() {
+//		return new DirectChannel();
+//	}
+//
+//	@Bean
+//	protected DirectChannel jobRequests() {
+//		return new DirectChannel();
+//	}
+
 	@Bean
-	protected DirectChannel jobChannel() {
-		return new DirectChannel();
+	protected DirectChannel statusTweets() {
+		DirectChannel channel = new DirectChannel();
+		channel.setComponentName("statusTweets");
+
+		return channel;
 	}
 
 	@Bean
@@ -85,7 +101,17 @@ public class IntegrationConfiguration {
 
 	@Bean
 	@ServiceActivator(inputChannel = "jobChannel", outputChannel = "nullChannel")
-	public JobLaunchingMessageHandler launcher(JobLauncher jobLauncher) {
+	protected JobLaunchingMessageHandler launcher(JobLauncher jobLauncher) {
 		return new JobLaunchingMessageHandler(jobLauncher);
+	}
+
+	@Bean
+	protected StatusUpdatingMessageHandler statusHandler() {
+		return new StatusUpdatingMessageHandler(twitterTemplate());
+	}
+
+	@Bean
+	protected EventDrivenConsumer statusConsumer(SubscribableChannel statusTweets) {
+		return new EventDrivenConsumer(statusTweets, statusHandler());
 	}
 }
