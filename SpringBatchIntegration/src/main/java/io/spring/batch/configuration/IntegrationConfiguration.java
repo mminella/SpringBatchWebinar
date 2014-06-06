@@ -85,7 +85,7 @@ public class IntegrationConfiguration {
 	@Bean
 	protected DirectChannel statusTweets() {
 		DirectChannel channel = new DirectChannel();
-		channel.setComponentName("statusTweets");
+//		channel.setComponentName("statusTweets");
 
 		return channel;
 	}
