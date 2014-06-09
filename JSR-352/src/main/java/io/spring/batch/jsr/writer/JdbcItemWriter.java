@@ -58,6 +58,7 @@ public class JdbcItemWriter extends AbstractItemWriter {
 	public void writeItems(List<Object> items) throws Exception {
 		for (Object item : items) {
 			Customer customer = (Customer) item;
+			System.out.println("writing customer: " + customer.getCustomerName());
 
 			preparedStatement.setString(1, customer.getCustomerName());
 			preparedStatement.setInt(2, customer.getQty());

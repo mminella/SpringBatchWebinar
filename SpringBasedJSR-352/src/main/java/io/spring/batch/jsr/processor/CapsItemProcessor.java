@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.spring.batch.jsr.reader;
+package io.spring.batch.jsr.processor;
 
 import io.spring.batch.jsr.domain.Customer;
-import org.springframework.batch.item.file.mapping.FieldSetMapper;
-import org.springframework.batch.item.file.transform.FieldSet;
-import org.springframework.validation.BindException;
+
+import javax.batch.api.chunk.ItemProcessor;
 
 /**
  * @author mminella
  */
-public class CustomerFieldSetMapper implements FieldSetMapper<Customer> {
+public class CapsItemProcessor implements ItemProcessor {
 	@Override
-	public Customer mapFieldSet(FieldSet fieldSet) throws BindException {
-		Customer cust = new Customer();
+	public Object processItem(Object item) throws Exception {
+		Customer customer = (Customer) item;
 
-		cust.setCustomerName(fieldSet.readString(0));
-		cust.setQty(fieldSet.readInt(1));
+		customer.setCustomerName(customer.getCustomerName().toUpperCase());
 
-		System.out.println("Read " + cust.getCustomerName());
-		return cust;
+		System.out.println("processed item: " + customer.getCustomerName());
+		return customer;
 	}
 }

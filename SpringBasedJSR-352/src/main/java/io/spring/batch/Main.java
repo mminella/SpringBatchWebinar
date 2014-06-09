@@ -33,8 +33,36 @@ public class Main {
 
 	private static final JobOperator operator = BatchRuntime.getJobOperator();
 
+	/**
+	 * Arguements:
+	 *
+	 * <ul>
+	 *     <li>jobName - The name of the job as required by the {@link javax.batch.operations.JobOperator}</li>
+	 *     <li>job parameters - A list of key=value pairs to be passed to the job as job parameters</li>
+	 * </ul>
+	 *
+	 * @param args arguments used to execute the job
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception {
 		Assert.notEmpty(args);
+		Properties props = parseProperties(args);
+
+		long executionId = operator.start(args[0], props);
+
+		while(!isItDoneYet(executionId)) {
+			Thread.sleep(1000);
+		}
+
+		reportResults(executionId);
+	}
+
+	private static boolean isItDoneYet(long executionId) {
+		BatchStatus batchStatus = operator.getJobExecution(executionId).getBatchStatus();
+		return batchStatus.compareTo(BatchStatus.STOPPED) > 0;
+	}
+
+	private static Properties parseProperties(String[] args) {
 		Properties props = new Properties();
 
 		if(args.length > 1) {
@@ -43,17 +71,7 @@ public class Main {
 				props.setProperty(prop[0], prop[1]);
 			}
 		}
-
-		long executionId = operator.start(args[0], props);
-
-		BatchStatus batchStatus = operator.getJobExecution(executionId).getBatchStatus();
-
-		while(batchStatus.compareTo(BatchStatus.STOPPED) < 0) {
-			Thread.sleep(1000);
-			batchStatus = operator.getJobExecution(executionId).getBatchStatus();
-		}
-
-		reportResults(executionId);
+		return props;
 	}
 
 	private static void reportResults(long executionId) {

@@ -71,6 +71,7 @@ public class FileItemReader implements ItemReader {
 	@Override
 	public Object readItem() throws Exception {
 		String line = reader.readLine();
+		System.out.println("read line: " + line);
 
 		if(line != null) {
 			String[] fields = line.split(",");

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	To run this job:
+	$ ./gradlew clean build
+	$ java -jar SpringBasedJSR-352/build/libs/SpringBasedJSR-352.jar fileToDatabase fileName=/Users/mminella/Documents/IntelliJWorkspace/SpringBatchWebinar/JSR-352/src/main/resources/data/customer.csv
+-->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -24,6 +29,8 @@
 			</bean>
 		</property>
 	</bean>
+
+	<bean id="processor" class="io.spring.batch.jsr.processor.CapsItemProcessor"/>
 
 	<bean id="writer" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
 		<property name="dataSource" ref="dataSource"/>

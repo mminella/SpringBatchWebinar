@@ -19,6 +19,7 @@
 					<property name="fileName" value="#{jobParameters['fileName']}"/>
 				</properties>
 			</reader>
+			<processor ref="io.spring.batch.jsr.processor.CapsItemProcessor"/>
 			<writer ref="io.spring.batch.jsr.writer.JdbcItemWriter"/>
 		</chunk>
 	</step>
