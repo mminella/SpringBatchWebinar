@@ -72,20 +72,10 @@ public class IntegrationConfiguration {
 		return new DirectChannel();
 	}
 
-//	@Bean
-//	protected DirectChannel jobChannel() {
-//		return new DirectChannel();
-//	}
-//
-//	@Bean
-//	protected DirectChannel jobRequests() {
-//		return new DirectChannel();
-//	}
 
 	@Bean
 	protected DirectChannel statusTweets() {
 		DirectChannel channel = new DirectChannel();
-//		channel.setComponentName("statusTweets");
 
 		return channel;
 	}
